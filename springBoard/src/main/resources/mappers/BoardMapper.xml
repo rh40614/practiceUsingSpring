@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- namespace를 이용해서 어떤 mapper를 가지고 올지 이름을 지정해준다. -->
+<mapper namespace="edu.board.mapper.boardMapper">
+
+	<!-- id는 같은 mapper내에서는 중복되지않게 설정 -->
+	 <select id="selectAll" resultType="BoardVO" parameterType="searchVO">	<!-- 데이터 한줄을 가져오기 때문에 boardVo타입 -->
+		SELECT bidx	<!-- * 쓰지 않기. 어떤 컬럼을 가지고 와야하는지 하나씩 다써야한다.   -->
+			 , b.title
+			 , b.midx
+			 , b.content
+			 , b.wdate 
+			 , u.userName
+			 , u.id
+		 FROM springboard b, springuser u
+		 where b.midx= u.midx
+		 <!-- 검색 조건문 -->
+		 <if test='searchType != null and searchType.equals("title")'>
+		 AND b.title like '%'||#{searchValue}||'%'
+		 </if>
+		 <if test='searchType != null and searchType.equals("contentWriter")'><!-- 내용이랑 작성자부분에서 둘다 검색이 됨 -->
+		 AND (b.content like '%'||#{searchValue}||'%'
+		  OR u.userName like '%'||#{searchValue}||'%')	
+		 </if>
+		 
+	 </select>
+	 
+	 <insert id="insert" parameterType="boardVO" >
+	 <!-- 태그가 아니라 데이터라고 인식하라고 하는 것 ![CDATA[ -->
+	 	<![CDATA[
+	 	INSERT INTO SPRINGBOARD (
+	 		   bidx
+	 		 , title
+	 		 , midx
+		 	 , content
+		     , wdate
+	   )VALUES(
+		 	   springboard_bidx.nextval
+		 	 , #{title}
+		 	 , #{midx}
+		 	 , #{content}
+		 	 , sysdate
+		 	 )
+		 	 
+		]]>
+	<!-- keyProperty: 이 쿼리가 실행 되면 결과를 어디에 담을거냐 현재 insert에 사용한 boardVO중에 어느 컬럼에 담을거냐. order after이므로 앞으쿼리가 실행된후 실행하겠다.  -->	
+		<selectKey resultType="int" keyProperty="bidx" order="AFTER">
+			SELECT max(bidx) FROM springboard 
+		</selectKey>
+	 </insert>
+	 
+	 
+	 <select id="selectOne" parameterType="int" resultType="boardVO"><!--  -->
+	 SELECT bidx	
+			 , b.title
+			 , b.midx
+			 , b.content
+			 , b.wdate 
+			 , u.userName
+			 , u.id
+	 	  FROM springboard b, springuser u
+		 where b.midx= u.midx
+		   AND b.bidx = #{bidx}
+	 
+	 </select>
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+</mapper>
