@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <!-- namespace를 이용해서 어떤 mapper를 가지고 올지 이름을 지정해준다. -->
+<mapper namespace="edu.storyboard.mapper.MemberMapper">
+
+	<insert id="insertMember" parameterType="MemberVO">
+		INSERT INTO storyMember(
+					midx
+					,memberId
+					,memberPassword
+					,memberName
+					,memberEmail
+					,memberPhone
+					,memberAdr
+					,adminYN
+					,delYN
+					)
+					VALUES(
+					m_seq.nextval
+					,#{memberId}
+					,#{memberPassword}
+					,#{memberName}
+					,#{memberEmail}
+					,#{memberPhone}
+					,#{memberAdr}
+					,#{adminYN}
+					,#{delYN}
+					
+					)
+	</insert>
+
+
+	<select id="selectByLogin" parameterType="MemberVO" resultType="MemberVO">
+		SELECT	midx
+				,memberId
+				,memberPassword
+				,memberName
+				,memberEmail
+				,memberPhone
+				,memberAdr
+				,adminYN
+				,delYN 
+			FROM storyMember
+		   WHERE memberId = #{memberId} 
+			 AND memberPassword = #{memberPassword}
+			
+	</select>
+
+
+	<!-- 아이디 중복확인 -->
+	<select id="idCheck" parameterType="MemberVO" resultType="int">
+     	SELECT COUNT(*) 
+     	  FROM storyMember
+      	 WHERE memberId = #{memberId}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+
+
+</mapper>

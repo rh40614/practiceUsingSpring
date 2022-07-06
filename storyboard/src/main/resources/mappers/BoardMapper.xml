@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+
+<mapper namespace="edu.storyboard.mapper.BoardMapper">		
+<!-- namespace는 별칭이기 때문에 실제적인 경로는 root-context에 지정을하고 여기서 지정하는 경로는 우리가 그냥 참고하기 위한  이름이다.
+실제적인 경로로 들어와서 그중에서 어떤 mapper를 쓸지 별칭을 지정해주는 것
+   -->
+
+	<select id="list_notice"  parameterType="SearchVO" resultType="BoardVO">
+		SELECT b.BIDX,
+			   b.title,
+			   b.content,
+			   b.writer,
+			   b.wdate,
+			   b.hit,
+		  	   b.filename,
+		  	   b.midx,
+			   b.boardType
+		  FROM storyBoard b, storyMember a
+		 WHERE b.midx= a.midx 
+		   AND b.boardType = 'notice'
+		 <!-- 검색 조건문 -->
+		 <if test='searchType != null and searchType.equals("title")'>
+		   AND b.title like '%'||#{searchValue}||'%'
+		 </if>
+		 <if test='searchType != null and searchType.equals("contentWriter")'><!-- 내용이랑 작성자부분에서 둘다 검색이 됨 -->
+		  AND (b.content like '%'||#{searchValue}||'%'
+		    OR a.memberName like '%'||#{searchValue}||'%')	
+		 </if>
+	
+	</select>
+	
+	
+	
+	
+	
+	
+	
+
+
+</mapper>

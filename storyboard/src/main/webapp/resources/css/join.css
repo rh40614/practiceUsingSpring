@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+main{
+	display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    
+    margin-top: 200px;
+}
+
+
+form{
+	display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+label{
+	margin:5px;
+}
+
+#btn{
+	width: 310px;
+	margin-top: 20px;
+	
+}
